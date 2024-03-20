@@ -5,8 +5,7 @@ variable "vpc-id" {
 variable "subnet-id" {
   type = list(string)
 }
-variable "ami" {
-}
+
 
 variable "sg-rules" {
   type = map(object({
@@ -23,12 +22,18 @@ variable "sg-rules" {
 
 variable "instances" {
   type = map(object({
+    os_ami         = string,
     type           = string,
-    tag_name       = string
+    user_data      = string,
+    tag_name       = string,
     instance_count = number
   }))
 }
 
 variable "key-name" {
   type = string
+}
+variable "ami_map" {
+  type = map(string)
+
 }

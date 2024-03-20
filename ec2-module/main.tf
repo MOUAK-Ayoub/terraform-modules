@@ -1,37 +1,50 @@
-data "aws_ssm_parameter" "ami" {
-  name = var.ami
+data "aws_ami" "ami" {
+  for_each =  var.ami_map
+
+  most_recent = true
+  filter {
+    name   = "name"
+    values = [each.value]
+  }
 }
 
 locals {
   instances_flat = merge([
   for key, val in var.instances :
   {
-    for idx in range(val["instance_count"]) :
+  for idx in range(val["instance_count"]) :
 
-     "${key}-${idx}" =>{
-        type     = val["type"],
-        tag_name = val["tag_name"]
-    }
-  }]...)
+  "${key}-${idx}" =>{
+
+      os_ami         = val["os_ami"],
+      type           = val["type"],
+      user_data      = val["user_data"],
+      tag_name       = val["tag_name"],
+      instance_count = val["instance_count"]
+  }
+  }
+  ]...)
 }
 
 resource "aws_instance" "instance" {
 
   for_each      = local.instances_flat
-  ami           = data.aws_ssm_parameter.ami.value
+  ami           = data.aws_ami.ami[each.value.os_ami].id
   instance_type = each.value.type
   key_name      = var.key-name
+  user_data = each.value.user_data
 
   vpc_security_group_ids = [
     aws_security_group.security_group.id
   ]
-  subnet_id =  var.subnet-id[index(keys(local.instances_flat), each.key) % length(var.subnet-id)]
+  subnet_id = var.subnet-id[index(keys(local.instances_flat), each.key) % length(var.subnet-id)]
 
 
   associate_public_ip_address = true
   tags                        = {
     Name = each.value.tag_name
   }
+    depends_on = [aws_security_group.security_group, data.aws_ami.ami]
 
 
 }
