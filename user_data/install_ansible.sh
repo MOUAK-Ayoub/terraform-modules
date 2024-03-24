@@ -14,6 +14,8 @@ pip3 install boto3 botocore
 
 pip3 install "pywinrm>=0.3.0"
 
+# Add Microsoft active directory module
+ansible-galaxy collection install microsoft.ad
 EOF
 
 echo '*********************************************** Script end*****************************************'

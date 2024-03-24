@@ -59,6 +59,13 @@ variable "instances" {
       type           = "t3.medium"
       user_data_path = "./user_data/open_connection_for_ansible.ps1"
       tag_name       = "Domain Controller"
+      instance_count = 1
+    },
+    "domain_computers" = {
+      os_ami         = "windows"
+      type           = "t3.small"
+      user_data_path = "./user_data/open_connection_for_ansible.ps1"
+      tag_name       = "Computers"
       instance_count = 2
     }
   }
