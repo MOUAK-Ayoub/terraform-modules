@@ -24,7 +24,7 @@ variable "instances" {
   type = map(object({
     os_ami         = string,
     type           = string,
-    user_data      = string,
+    user_data      = optional(string),
     tag_name       = string,
     instance_count = number
   }))
