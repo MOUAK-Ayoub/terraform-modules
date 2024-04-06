@@ -51,9 +51,7 @@ resource "aws_instance" "instance" {
 
 
 resource "aws_security_group" "security_group" {
-  name   = "main_sg"
   vpc_id = var.vpc-id
-
 
 }
 
