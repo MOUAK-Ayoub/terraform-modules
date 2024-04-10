@@ -34,6 +34,7 @@ resource "aws_instance" "instance" {
   key_name      = var.key-name
   user_data = each.value.user_data
 
+
   vpc_security_group_ids = [
     aws_security_group.security_group.id
   ]
